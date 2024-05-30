@@ -32,8 +32,8 @@ services:
       - CARBON_AGGREGATOR_DISABLED=1
 
   ml_service:
-#    build: ./ml_service
-    image: angriff07/grafana_practice_ml_service:latest
+    build: ./ml_service
+#    image: angriff07/grafana_practice_ml_service:latest
     ports:
       - 8000:8000
     depends_on:
