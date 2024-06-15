@@ -63,6 +63,8 @@ app = FastAPI()
 
 @app.post("/predict_gender", response_model=Prediction)
 def predict_gender(user_request: UserRequestIn):
+    tic_service_resp = time.perf_counter()
+
     model_type = user_request.model_type
     name = user_request.name
     statsd.incr(f'predict_gender.{model_type}.count')
@@ -75,7 +77,9 @@ def predict_gender(user_request: UserRequestIn):
     tic = time.perf_counter()
     features = np.asarray(feature_extractor.transform([name]).todense())
     toc = time.perf_counter()
+    tic_model_inference = time.perf_counter()
     probas = model.predict_proba(features)[0]
+    toc_model_inference = time.perf_counter()
     if probas[0] > probas[1]:
         gender = Gender.f
         proba = probas[0]
@@ -83,9 +87,13 @@ def predict_gender(user_request: UserRequestIn):
         gender = Gender.m
         proba = probas[1]
 
+    toc_service_resp = time.perf_counter()
+
     statsd.incr(f'predict_gender.{model_type}.result.{gender}.count')
     statsd.gauge(f'predict_gender.{model_type}.result.{gender}.proba', proba)
     statsd.timing(f'predict_gender.{model_type}.timing.feature_extraction', toc - tic)
+    statsd.timing(f'predict_gender.{model_type}.timing.model_inference', toc_model_inference - tic_model_inference)
+    statsd.timing(f'predict_gender.{model_type}.timing.service_resp', toc_service_resp - tic_service_resp)
     statsd.incr(f'predict_gender.request_status.success.count')
     return Prediction(
         name=user_request.name,
