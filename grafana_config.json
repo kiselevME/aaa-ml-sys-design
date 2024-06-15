@@ -1,0 +1,1129 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 13,
+      "panels": [],
+      "title": "Health",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.05
+              },
+              {
+                "color": "red",
+                "value": 0.1
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "A",
+          "target": "movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.request_status.*.count, -2)), '1min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "B",
+          "target": "movingAverage(aliasByNode(stats.ml_service.predict_gender.request_status.error.count, -2), '1min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(divideSeries(#B, #A), 'Error rate')",
+          "targetFull": "alias(divideSeries(movingAverage(aliasByNode(stats.ml_service.predict_gender.request_status.error.count, -2), '1min'), movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.request_status.*.count, -2)), '1min')), 'Error rate')"
+        }
+      ],
+      "title": "Error Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2500
+              },
+              {
+                "color": "green",
+                "value": 3500
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "A",
+          "target": "scale(sumSeries(aliasByNode(stats.ml_service.predict_gender.request_status.*.count, -2)), 60)"
+        }
+      ],
+      "title": "RPM",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Probas",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Model proba",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(stats.gauges.ml_service.predict_gender.$ModelType.result.$gender.proba, -4, -2)"
+        }
+      ],
+      "title": "Probas",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 9,
+      "panels": [],
+      "title": "Timing",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Time feature extraction",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(scale(stats.timers.ml_service.predict_gender.$ModelType.timing.feature_extraction.upper_90, 1000), -4)"
+        }
+      ],
+      "title": "Feature Extraction Timing (90 perc)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Time model inference",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(scale(stats.timers.ml_service.predict_gender.$ModelType.timing.model_inference.upper_90, 1000), -4)"
+        }
+      ],
+      "title": "Model Inference Timing (90 perc)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Time response",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(scale(stats.timers.ml_service.predict_gender.$ModelType.timing.service_resp.upper_90, 1000), -4)"
+        }
+      ],
+      "title": "Service Response Timing – Latency (90 perc)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Time response",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(scale(stats.timers.ml_service.predict_gender.$ModelType.timing.service_resp.mean, 1000), -4)"
+        }
+      ],
+      "title": "Service Response Timing (mean)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 7,
+      "panels": [],
+      "title": "Rates",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Error rate",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "A",
+          "target": "movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.request_status.*.count, -2)), '1min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "B",
+          "target": "movingAverage(aliasByNode(stats.ml_service.predict_gender.request_status.error.count, -2), '1min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(divideSeries(#B, #A), 'Error rate')",
+          "targetFull": "alias(divideSeries(movingAverage(aliasByNode(stats.ml_service.predict_gender.request_status.error.count, -2), '1min'), movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.request_status.*.count, -2)), '1min')), 'Error rate')"
+        }
+      ],
+      "title": "Error Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Percentage of men",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "A",
+          "target": "movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.$ModelType.result.m.count, -2)), '5min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": true,
+          "refCount": 1,
+          "refId": "B",
+          "target": "movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.$ModelType.result.*.count, -2)), '5min')"
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(divideSeries(#A, #B), 'Male Rate')",
+          "targetFull": "alias(divideSeries(movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.$ModelType.result.m.count, -2)), '5min'), movingAverage(sumSeries(aliasByNode(stats.ml_service.predict_gender.$ModelType.result.*.count, -2)), '5min')), 'Male Rate')"
+        }
+      ],
+      "title": "Prediction Male Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "oaXDkA8Ik"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Percentage of CPU usage",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "6bcdac83a2de-a"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 49
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "oaXDkA8Ik"
+          },
+          "hide": false,
+          "refCount": -1,
+          "refId": "A",
+          "target": "aliasByNode(carbon.agents.6bcdac83a2de-a.cpuUsage, -2)"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "ModelType",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "lr",
+            "value": "lr"
+          },
+          {
+            "selected": false,
+            "text": "cb",
+            "value": "cb"
+          }
+        ],
+        "query": "lr,cb",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "gender",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "f",
+            "value": "f"
+          },
+          {
+            "selected": false,
+            "text": "m",
+            "value": "m"
+          }
+        ],
+        "query": "f,m",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "ML service dashboard",
+  "uid": "dSRBm08Iz",
+  "version": 28,
+  "weekStart": ""
+}
